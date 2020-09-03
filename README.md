@@ -8,3 +8,4 @@ I made this Android application primarily because I was annoyed that the default
 * Customized vibration patterns
 * Sleep feature
 * Prettier UI
+* AM/PM time support
