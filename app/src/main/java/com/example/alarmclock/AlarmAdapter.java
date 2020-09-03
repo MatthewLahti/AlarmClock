@@ -87,9 +87,9 @@ public class AlarmAdapter extends ArrayAdapter<Alarm> {
         c.set(Calendar.HOUR_OF_DAY,alarm.getHour());
         c.set(Calendar.MINUTE,alarm.getMinute());
         c.set(Calendar.SECOND,0);
-        //if (c.before(Calendar.getInstance())) {
-        //    c.set(Calendar.DAY_OF_MONTH,(Calendar.DAY_OF_MONTH + 1));
-        //}
+        if (c.before(Calendar.getInstance())) {
+            c.set(Calendar.DAY_OF_MONTH,(Calendar.DAY_OF_MONTH + 1));
+        }
         alarmManager.setExact(AlarmManager.RTC_WAKEUP,c.getTimeInMillis(),pendingIntent);
     }
 
