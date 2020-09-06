@@ -13,6 +13,8 @@ import android.os.Vibrator;
 import java.io.File;
 import java.nio.file.Paths;
 
+import static android.content.Context.VIBRATOR_SERVICE;
+
 public class MusicController {
     private static MusicController instance;
     private Context context;
@@ -34,7 +36,7 @@ public class MusicController {
                 .setUsage(AudioAttributes.USAGE_ALARM)
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                 .build();
-        this.vibrator = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
+        this.vibrator = (Vibrator)context.getSystemService(VIBRATOR_SERVICE);
     }
     public static MusicController getInstance(Context context, int alarmid){
         if (instance == null){
