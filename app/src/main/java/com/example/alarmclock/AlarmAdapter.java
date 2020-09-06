@@ -11,11 +11,14 @@ import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 public class AlarmAdapter extends ArrayAdapter<Alarm> {
     private LayoutInflater inflater;
@@ -68,7 +71,6 @@ public class AlarmAdapter extends ArrayAdapter<Alarm> {
 
         convertView.setOnClickListener(new View.OnClickListener(){
             public void onClick(final View v){
-                System.out.println("alarm time: " + alarm.getHour() + ":" + alarm.getMinute());
                 Intent intent = new Intent(context,EditAlarmActivity.class);
                 intent.putExtra("AlarmPos",position);
                 context.startActivity(intent);
@@ -88,8 +90,11 @@ public class AlarmAdapter extends ArrayAdapter<Alarm> {
         c.set(Calendar.MINUTE,alarm.getMinute());
         c.set(Calendar.SECOND,0);
         if (c.before(Calendar.getInstance())) {
-            c.set(Calendar.DAY_OF_MONTH,(Calendar.DAY_OF_MONTH + 1));
+            //c.add(Calendar.DATE,1);
         }
+        String time = "Alarm set for: ";
+        time+= DateFormat.getTimeInstance(DateFormat.SHORT).format(c.getTime());
+        Toast.makeText(context,time,Toast.LENGTH_LONG).show();
         alarmManager.setExact(AlarmManager.RTC_WAKEUP,c.getTimeInMillis(),pendingIntent);
     }
 

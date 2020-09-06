@@ -16,9 +16,9 @@ import android.widget.Switch;
 
 
 public class AlarmSoundSelector extends AppCompatActivity {
-    Switch alarmSound;
     Button ringtoneSelector;
     Button saveButton;
+    Button cancelButton;
     Uri ringtone;
     String ringtoneTitle;
     String existingRingtoneTitle = null;
@@ -40,13 +40,13 @@ public class AlarmSoundSelector extends AppCompatActivity {
             ringtoneSelector.setText(existingRingtoneTitle);
             this.ringtoneTitle = existingRingtoneTitle;
         } else {
-            ringtone = RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_ALARM);
-            _ringtone = RingtoneManager.getRingtone(getApplicationContext(),ringtone);
-            ringtoneSelector.setText(_ringtone.getTitle(getApplicationContext()));
-            this.ringtoneTitle = _ringtone.getTitle(getApplicationContext());
+            String title = defaultTitle();
+            ringtoneSelector.setText(title);
+            this.ringtoneTitle = title;
         }
         volumeBar = findViewById(R.id.volumeBar);
         saveButton = findViewById(R.id.saveButton);
+        cancelButton = findViewById(R.id.cancelButton);
         ringtoneSelector.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,6 +72,12 @@ public class AlarmSoundSelector extends AppCompatActivity {
                 finish();
             }
         });
+        cancelButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                finish();
+            }
+        });
         volumeBar.setProgress(volume);
         volumeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -84,20 +90,26 @@ public class AlarmSoundSelector extends AppCompatActivity {
             public void onStopTrackingTouch(SeekBar seekBar) {}
         });
     }
+    private String defaultTitle(){
+        ringtone = RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_ALARM);
+        _ringtone = RingtoneManager.getRingtone(getApplicationContext(),ringtone);
+        return _ringtone.getTitle(getApplicationContext());
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == RESULT_OK){
-            switch (requestCode){
-                case 1:
-                    ringtone = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
-                    Ringtone temp = RingtoneManager.getRingtone(getApplicationContext(),ringtone);
-                    ringtoneSelector.setText(temp.getTitle(getApplicationContext()));
-                    ringtoneTitle = temp.getTitle(getApplicationContext());
+            if(requestCode == 1){
+                ringtone = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+                Ringtone temp = RingtoneManager.getRingtone(getApplicationContext(),ringtone);
+                ringtoneSelector.setText(temp.getTitle(getApplicationContext()));
+                ringtoneTitle = temp.getTitle(getApplicationContext());
             }
         } else{
-            finish();
+            String title = defaultTitle();
+            ringtoneSelector.setText(title);
+            this.ringtoneTitle = title;
         }
     }
 }

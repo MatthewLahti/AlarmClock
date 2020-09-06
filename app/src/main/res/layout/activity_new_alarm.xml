@@ -90,5 +90,14 @@
         android:layout_marginStart="25dp"
         android:layout_marginTop="326dp"
         android:text="" />
+    <TextView
+        android:id="@+id/vibrateTitle"
+        android:layout_width="138dp"
+        android:layout_height="33dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="426dp"
+        android:text="" />
 
 </RelativeLayout>

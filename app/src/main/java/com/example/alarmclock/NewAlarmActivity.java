@@ -26,7 +26,9 @@ import java.io.File;
 import java.util.List;
 
 public class NewAlarmActivity extends AppCompatActivity {
-    public int REQUEST_CODE = 100;
+    public int REQUEST_CODE_SOUND = 100;
+    public int REQUEST_CODE_VIBRATE = 101;
+    long[] vibrationPattern;
     NumberPicker hourPicker;
     NumberPicker minutePicker;
     Switch alarmSound;
@@ -37,32 +39,35 @@ public class NewAlarmActivity extends AppCompatActivity {
     Boolean vibrate = false;
     String currentRingtoneTitle;
     TextView ringtoneTitle;
+    TextView vibrateTitle;
     Ringtone ringtone;
     String ringtoneUriPath;
     String currentringtoneTitle;
+    String currentvibrateTitle;
     int volume = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_alarm);
+        alarmSound = findViewById(R.id.alarmSound);
+        alarmVibrate = findViewById(R.id.alarmVibrate);
+        currentvibrateTitle = "Default";
         setupLayout();
     }
 
     public void setupLayout(){
         final Uri currentTone= RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_ALARM);
-        System.out.println("NEW ALARM SETUP LAYOUT " + currentTone.getPath());
         Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(),currentTone);
         this.ringtoneUriPath = currentTone.getPath();
-        System.out.println("NEW ALARM SETUP HASHCODE: " + currentTone.hashCode());
         this.ringtone = ringtone;
         ringtoneTitle = findViewById(R.id.ringtoneTitle);
+        vibrateTitle = findViewById(R.id.vibrateTitle);
         ringtoneTitle.setText(ringtone.getTitle(getApplicationContext()));
-        this.currentRingtoneTitle = ringtone.getTitle(getApplicationContext());
+        vibrateTitle.setText(currentvibrateTitle);
+        currentRingtoneTitle = ringtone.getTitle(getApplicationContext());
         hourPicker = findViewById(R.id.hourPicker);
         minutePicker = findViewById(R.id.minutePicker);
-        alarmSound = findViewById(R.id.alarmSound);
-        alarmVibrate = findViewById(R.id.alarmVibrate);
         cancel = findViewById(R.id.cancel);
         save = findViewById(R.id.save);
         save.setOnClickListener(new View.OnClickListener() {
@@ -83,7 +88,7 @@ public class NewAlarmActivity extends AppCompatActivity {
                 if(alarmSound.isChecked()){
                     sound = true;
                     Intent intent = new Intent(getApplicationContext(),AlarmSoundSelector.class);
-                    startActivityForResult(intent,REQUEST_CODE);
+                    startActivityForResult(intent,REQUEST_CODE_SOUND);
                 } else{
                     sound = false;
                 }
@@ -94,6 +99,8 @@ public class NewAlarmActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(alarmVibrate.isChecked()){
                     vibrate = true;
+                    Intent intent = new Intent(getApplicationContext(),VibrationSelector.class);
+                    startActivityForResult(intent,REQUEST_CODE_VIBRATE);
                 } else {
                     vibrate = false;
                 }
@@ -148,6 +155,8 @@ public class NewAlarmActivity extends AppCompatActivity {
         alarm.setId(Integer.parseInt(id));
         alarm.volume = volume;
         alarm.vibrate = vibrate;
+        alarm.setVibratePattern(vibrationPattern);
+        alarm.vibratePatternTitle = currentvibrateTitle;
         MainActivity.alarmList.addAlarm(alarm);
         MainActivity.alarmList.saveAlarms(getApplicationContext());
         MainActivity.adapter.notifyDataSetChanged();
@@ -156,12 +165,17 @@ public class NewAlarmActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    // This is only going to work for new alarms, i need to figure something out for editing the alarms
+    // as when the activity ends, it
+    // ok thats entirely false actually, I never actually start the intent from the selector activity
+    // i can leave this as is
+    // do i even want to set a default pattern? idk, it could make sense to just have no vibration if no custom pattern is selected?
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
-        if(requestCode == REQUEST_CODE){
+        if(requestCode == REQUEST_CODE_SOUND){
             if(resultCode == RESULT_OK){
-                this.currentRingtoneTitle = data.getStringExtra("ringtonetitle");
-                ringtoneTitle.setText(this.currentRingtoneTitle);
+                currentRingtoneTitle = data.getStringExtra("ringtonetitle");
+                ringtoneTitle.setText(currentRingtoneTitle);
                 Uri returnedResult = data.getData();
                 volume = data.getIntExtra("ringtoneVolume",100);
 
@@ -169,6 +183,19 @@ public class NewAlarmActivity extends AppCompatActivity {
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString(data.getStringExtra("ringtonetitle"),returnedResult.toString());
                 editor.commit();
+            }
+        } else if(requestCode == REQUEST_CODE_VIBRATE){
+            if(resultCode == RESULT_OK){
+                Bundle bundle = data.getExtras();
+                long[] pattern = bundle.getLongArray("pattern");
+                this.vibrationPattern = pattern;
+                currentvibrateTitle = data.getStringExtra("vibratePatternName");
+                vibrateTitle.setText(currentvibrateTitle);
+            } else {
+                long[] defaultPattern = {0,100,100};
+                this.vibrationPattern = defaultPattern;
+                currentvibrateTitle = "Default";
+                vibrateTitle.setText(currentvibrateTitle);
             }
         }
     }

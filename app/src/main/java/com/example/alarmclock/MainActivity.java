@@ -1,7 +1,5 @@
 package com.example.alarmclock;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,24 +10,22 @@ import android.widget.ListView;
 import android.widget.Switch;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static String ALARMIDKEY = "hello";
     ImageButton newAlarm;
     public static ArrayAdapter<Alarm> adapter;
     Switch alarmState;
     public static AlarmList alarmList = new AlarmList();
     ListView alarmView;
     Context context;
-    private NotificationHelper mNotificationHelper;
+    //private NotificationHelper mNotificationHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mNotificationHelper = new NotificationHelper(this);
+        //mNotificationHelper = new NotificationHelper(this);
         context = getApplicationContext();
         alarmList.loadAlarms(context);
         alarmView = (ListView) findViewById(R.id.alarmView);

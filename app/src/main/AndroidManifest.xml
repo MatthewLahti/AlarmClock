@@ -4,9 +4,10 @@
 
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS" ></uses-permission>
-    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" ></uses-permission>
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" ></uses-permission>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -14,7 +15,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AlarmSoundSelector"></activity>
+        <activity
+            android:name=".VibrationSelector"
+            android:label="@string/title_activity_vibration_selector"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".AlarmSoundSelector" />
         <activity android:name=".EditAlarmActivity" />
         <activity android:name=".NewAlarmActivity" />
         <activity android:name=".MainActivity">

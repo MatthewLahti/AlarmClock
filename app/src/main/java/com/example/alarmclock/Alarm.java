@@ -20,6 +20,8 @@ public class Alarm implements Serializable{
     public int id;
     public int volume;
     public String ringtoneTitle;
+    public long[] vibratePattern;
+    public String vibratePatternTitle;
 
     public Alarm(int hour, int minute, Boolean sound,String ringtoneTitle){
         this.displayMinute = String.format("%02d", minute);
@@ -31,7 +33,9 @@ public class Alarm implements Serializable{
         this.sound = sound;
         this.ringtoneTitle = ringtoneTitle;
     }
-
+    public void setVibratePattern(long[] p){
+        this.vibratePattern = p;
+    }
     public void setId(int n) {
         this.id = n;
     }

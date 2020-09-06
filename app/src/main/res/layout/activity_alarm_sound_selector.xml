@@ -47,9 +47,20 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginStart="168dp"
-        android:layout_marginBottom="-3dp"
+        android:layout_marginStart="250dp"
+        android:layout_marginBottom="0dp"
         android:text="Save" />
+
+    <Button
+        android:id="@+id/cancelButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="50dp"
+        android:layout_marginBottom="0dp"
+        android:text="Cancel" />
 
     <SeekBar
         android:id="@+id/volumeBar"
